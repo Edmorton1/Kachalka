@@ -14,9 +14,13 @@ class Types(models.Model):
     def __str__(self):
         return self.name
 
+
 class Statistic(models.Model):
     date = models.DateField('Дата')
-    date_str = datetime.strftime(datetime.now(), '%d-%m-%Y')
+
+    def date_as_string(self):
+        return self.date.strftime('%d-%m-%Y')
+
     calories = models.IntegerField('Калории')
     time = models.TimeField('Время', blank=True, null=True)
     type = models.ForeignKey(
@@ -28,8 +32,8 @@ class Statistic(models.Model):
 
     class Meta:
         verbose_name = 'Статистика',
-        verbose_name_plural = 'Статистика'
-    
-    def __str__(self):
-        return self.date_str
+        verbose_name_plural = 'Статистика',
+        ordering = ('-id', 'date')
 
+    def __str__(self):
+        return self.date_as_string()
