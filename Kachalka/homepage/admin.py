@@ -21,12 +21,14 @@ class RecordsAdmin(admin.ModelAdmin):
     list_display = (
         'exercise',
         'record',
+        'date',
     )
     list_editable = (
         'exercise',
         'record',
     )
 
-admin.site.register(Records)
+
 admin.site.register(Statistic)
 admin.site.register(Types)
+admin.site.register(Records)

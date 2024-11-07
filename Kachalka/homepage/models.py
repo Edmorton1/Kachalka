@@ -39,12 +39,13 @@ class Statistic(models.Model):
         return self.date_as_string()
 
 class Records(models.Model):
-    exercise = models.CharField('Упражнение', max_length=32),
-    record = models.IntegerField('Рекорд'),
+    exercise = models.CharField('Упражнение', max_length=32)
+    record = models.IntegerField('Рекорд')
+    date = models.DateField('Дата', default=datetime.now())
 
     class Meta:
-        verbose_name = 'Рекорды',
+        verbose_name = 'Рекорд'
         verbose_name_plural = 'Рекорды'
     
     def __str__(self):
-        return self.record
+        return f"{self.exercise} — {self.record}"

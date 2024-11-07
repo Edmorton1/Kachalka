@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from .models import Statistic
+from .models import Statistic, Records
 from django.db.models import Avg, Count
 import datetime
+
 
 # Create your views here.
 
@@ -31,6 +32,7 @@ def best_result(a):
 def index(request):
     template = 'homepage/index.html'
     statis_list = Statistic.objects.values('date', 'calories', 'time', 'type__name')
+    records = Records.objects.values('exercise', 'record')
 
     context = {
         'statis': statis_list,
@@ -38,5 +40,7 @@ def index(request):
         'count': statis_list.aggregate(Count('date')),
         'average_calories': round(statis_list.aggregate(Avg('calories'))['calories__avg']),
         'average_time': average_time(statis_list.values('time')),
+
+        'records': records,
     }
     return render(request, template, context)

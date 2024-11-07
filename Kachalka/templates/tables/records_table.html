@@ -1,0 +1,25 @@
+{% load static %}
+<head>
+  <link rel="stylesheet" href="{% static "css/static_table.css" %}">
+</head>
+
+<div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Упражнение</th>
+        <th scope="col">Рекорд</th>
+        <th scope="col">Время с последнего рекорда</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for part in records %}
+      <tr>
+        <td>{{ part.exercise }}</td>
+        <td>{{ part.record }}</td>
+        <td>Otto</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+</div>
