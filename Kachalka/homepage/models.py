@@ -41,7 +41,7 @@ class Statistic(models.Model):
 class Records(models.Model):
     exercise = models.CharField('Упражнение', max_length=32)
     record = models.IntegerField('Рекорд')
-    date = models.DateField('Дата', default=datetime.now())
+    date = models.DateField('Дата', default=datetime.now().date())
 
     class Meta:
         verbose_name = 'Рекорд'

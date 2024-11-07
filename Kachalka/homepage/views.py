@@ -14,6 +14,9 @@ def average_time(a):
         minutes += a[i]['time'].minute
     return (int(hours / len(a) * 60 + minutes / len(a))//60, int(hours / len(a) * 60 + minutes / len(a)) % 60)
 
+def day_after(dat):
+    return (-(datetime.datetime.now().date() - dat).days)
+
 def best_result(a):
     maximum = 0
     date = 0
@@ -27,12 +30,23 @@ def best_result(a):
         if i['calories'] == maximum:
             date = i['date']
             time = i['time']
-            return (date, maximum, time)
+            days = day_after(date)
+            return (date, maximum, time, -days)
 
 def index(request):
     template = 'homepage/index.html'
     statis_list = Statistic.objects.values('date', 'calories', 'time', 'type__name')
-    records = Records.objects.values('exercise', 'record')
+    records = Records.objects.values('exercise', 'record', 'date')
+
+    records_with_days = []
+    for record in records:
+        days_since_record = day_after(record['date'])
+        records_with_days.append({
+            'exercise': record['exercise'],
+            'record': record['record'],
+            'date': record['date'],
+            'days_since_record': days_since_record
+        })
 
     context = {
         'statis': statis_list,
@@ -41,6 +55,6 @@ def index(request):
         'average_calories': round(statis_list.aggregate(Avg('calories'))['calories__avg']),
         'average_time': average_time(statis_list.values('time')),
 
-        'records': records,
+        'records': records_with_days,
     }
     return render(request, template, context)

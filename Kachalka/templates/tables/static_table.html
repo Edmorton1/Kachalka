@@ -14,9 +14,9 @@
       <tr>
         <td class="text-center" colspan="4"><h6>
           {% if best_result.2.hour == 0  %}
-          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.minute }} минут
+          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.minute }} минут, это было {{ best_result.3 }} дней назад
           {% else %}
-          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.hour }} час {{ best_result.2.minute }} минут
+          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.hour }} час {{ best_result.2.minute }} минут, это было {{ best_result.3 }} дней назад
           {% endif %}
         </h6></td>
       </tr>

@@ -9,7 +9,7 @@
       <tr>
         <th scope="col">Упражнение</th>
         <th scope="col">Рекорд</th>
-        <th scope="col">Время с последнего рекорда</th>
+        <th scope="col">Дней с последнего рекорда</th>
       </tr>
     </thead>
     <tbody>
@@ -17,7 +17,7 @@
       <tr>
         <td>{{ part.exercise }}</td>
         <td>{{ part.record }}</td>
-        <td>Otto</td>
+        <td>{{ part.days_since_record }}</td>
       </tr>
       {% endfor %}
     </tbody>
