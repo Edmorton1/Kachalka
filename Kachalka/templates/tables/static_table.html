@@ -1,3 +1,54 @@
-<div>
-    
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static "css/static_table.css" %}">
+</head>
+
+<div class="static-table">
+    <div class="buttons">
+        <button type="button" class="btn btn-primary tree-button">ДОБАВИТЬ</button>
+        <button type="button" class="btn btn-primary tree-button">ФИЛЬТРОВАТЬ</button>
+        <button type="button" class="btn btn-primary tree-button">ПЛАНЫ</button>
+    </div>
+<table class="table table-bordered tab2">
+    <thead>
+      <tr>
+        <td class="text-center" colspan="4"><h6>Рекорд: {{ best_result }}</h6></td>
+      </tr>
+      <tr>
+        <td class="text-center" colspan="4"><h6>
+          <div class="row" style="
+          width: 100%;
+          ">
+            <div class="col">Всего тренировок: {{ count.date__count }}</div>
+            <div class="col">средний результат: {{ average_calories }}</div>
+            <div class="col">среднее время 
+              {% if average_time.0 != 0 %}
+              {{ average_time.0 }} часов {{ average_time.1 }} минут
+              {% else %}
+              {{ average_time.1 }} минут
+              {% endif %}</div>
+          </div></h6></td>
+      </tr>
+        <tr>
+          <th scope="col">Дата</th>
+          <th scope="col">Калории</th>
+          <th scope="col">Время</th>
+          <th scope="col">Тип</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for part in statis %}
+        <tr>
+          <th scope="row">{{ part.date }}</th>
+          <td>{{ part.calories }}</td>
+          {% if part.time.hour == 0 %}
+          <td>{{ part.time.minute }} минут</td>
+          {% else %}
+          <td>{{ part.time.hour }} час {{ part.time.minute }} минут</td>
+          {% endif %}
+          <td>{{ part.type__name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 </div>
