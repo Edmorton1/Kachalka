@@ -12,7 +12,13 @@
 <table class="table table-bordered tab2">
     <thead>
       <tr>
-        <td class="text-center" colspan="4"><h6>Рекорд: {{ best_result }}</h6></td>
+        <td class="text-center" colspan="4"><h6>
+          {% if best_result.2.hour == 0  %}
+          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.minute }} минут
+          {% else %}
+          Ваш лучший результат был установлен {{ best_result.0 }} - {{ best_result.1 }} калорий за {{ best_result.2.hour }} час {{ best_result.2.minute }} минут
+          {% endif %}
+        </h6></td>
       </tr>
       <tr>
         <td class="text-center" colspan="4"><h6>
