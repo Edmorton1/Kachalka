@@ -37,3 +37,14 @@ class Statistic(models.Model):
 
     def __str__(self):
         return self.date_as_string()
+
+class Records(models.Model):
+    exercise = models.CharField('Упражнение', max_length=32),
+    record = models.IntegerField('Рекорд'),
+
+    class Meta:
+        verbose_name = 'Рекорды',
+        verbose_name_plural = 'Рекорды'
+    
+    def __str__(self):
+        return self.record
