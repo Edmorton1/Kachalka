@@ -50,7 +50,7 @@ def statis():
 
 def records():
     """Возвращает данные о рекордах, включая дни с момента установления рекорда."""
-    records = Records.objects.values('exercise', 'record', 'date')
+    records = Records.objects.values('exercise', 'record', 'date').order_by('-id')
     records_with_days = [
         {
             'exercise': record['exercise'],
