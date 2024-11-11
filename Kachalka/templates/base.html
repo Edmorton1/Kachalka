@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static "img/icon2.ico" %}">
     <title>Kachalka</title>
-    <link rel="stylesheet" href="{% static "scss/bootstrap.css" %}">
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
   </head>
   <body>
     {% include "includes/header.html" %}
     <main>
-      <div class="container">
         {% block content %}
         {% endblock  %}
-      </div>
     </main>
     {% include "includes/footer.html" %}
   </body>

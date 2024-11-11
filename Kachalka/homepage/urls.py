@@ -5,4 +5,5 @@ app_name = 'homepage'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('records_add/', views.radd, name='radd')
 ]
