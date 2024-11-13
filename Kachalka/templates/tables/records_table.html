@@ -6,62 +6,79 @@
 <div class="static-table" style="
 height: 460px;
 overflow-x: auto;">
-{% if '/records_add/' not in request.path %}
-  <div class="buttons">
-    <a href="{% url "homepage:radd" %}" class="btn btn-primary tree-button">ДОБАВИТЬ</a>
-  </div>
-  <table class="table text-center">
-    <thead>
-      <tr>
-        <th scope="col">Упражнение</th>
-        <th scope="col">Рекорд</th>
-        <th scope="col">Дней с последнего рекорда</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for part in records %}
-      <tr>
-        <td>{{ part.exercise }}</td>
-        <td>{{ part.record }}</td>
-        <td>{{ part.days_since_record }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>  
-  {% else %}
-  <div class="buttons">
-    <a href="{% url "homepage:radd" %}" class="btn btn-primary disabled tree-button">ДОБАВИТЬ</a>
-  </div>
-  <table class="table text-center">
-    <thead>
-      <tr>
-        <th scope="col">Упражнение</th>
-        <th scope="col">Рекорд</th>
-        <th scope="col">Дней с последнего рекорда</th>
-      </tr>
-    </thead>
-    <tbody>
-        <form method="POST">
-        {% csrf_token %}
-          <div>
-            <td><input type="text" name="exercise" class="form-control"></td>
-            <td><input type="number" name="record" class="form-control"></td>
-            <td>
-              <div class="d-flex align-items-center">
-                <input type="date" name="date" class="form-control"><button type="submit" class="btn btn-primary">Готово</button></td>
-              </div>
-          </div>
-        </form>
-      {% for part in records %}
-      <tr>
-        <td>{{ part.exercise }}</td>
-        <td>{{ part.record }}</td>
-        <td>{{ part.days_since_record }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>  
-  
-  {% endif %}
-</div>
 
+
+
+<div class="buttons">
+
+{% if '/records_add/' not in request.path and '/records_edit/' not in request.path %}
+    <a href="{% url "homepage:radd" %}" class="btn btn-primary tree-button">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>
+{% elif '/records_add/' in request.path %}
+    <a href="{% url "homepage:radd" %}" class="btn btn-primary disabled tree-button">ДОБАВИТЬ</a>
+{% elif '/records_edit/' in request.path  %}
+    <a href="{% url "homepage:radd" %}" class="btn btn-primary disabled tree-button">ИЗМЕНИТЬ</a>
+{% endif %}
+
+
+  </div>
+  <table class="table text-center">
+    <thead>
+      <tr>
+        <th colspan="1" scope="col">Упражнение</th>
+        <th colspan="1" scope="col">Рекорд</th>
+        <th colspan="1" scope="col">Дней с последнего рекорда</th>
+        {% if '/records_add/' in request.path or '/records_edit/' in request.path %}
+        <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+
+{% if '/records_add/' not in request.path and '/records_edit/' not in request.path %}
+
+{% else %}
+
+<form method="POST">
+  {% csrf_token %}
+    <div>
+      <td colspan="1"><input type="text" name="exercise" class="form-control" value="{{ form.instance.exercise }}"></td>
+      <td colspan="1"><input type="number" name="record" class="form-control" value="{{ form.instance.record }}"></td>
+      <td colspan="2">
+        <div class="d-flex align-items-center">
+          <input type="date" name="date" class="form-control" value="" id="dateField"><button type="submit" class="btn btn-primary">Готово</button></td>
+          <script>
+            const dateField = document.getElementById('dateField');
+            const today = new Date();
+            dateField.value = today.toISOString().split('T')[0];
+        </script>
+        </div>
+    </div>
+  </form>
+
+{% endif %}
+
+      {% for part in records %}
+      {% if part.pk != form.instance.pk %}
+      <tr>
+        <td>{{ part.exercise }}</td>
+        <td>{{ part.record }}</td>
+        <td>{{ part.days_since_record }}</td>
+        {% if '/records_add/' in request.path or '/records_edit/' in request.path %}
+        <td>
+          <form method="POST">
+          {% csrf_token %}
+            <a href="{% url 'homepage:edit' part.pk %}" class="btn btn-warning" >Изменить</a>
+            <a href="{% url 'homepage:rdelete' part.pk %}" class="btn btn-danger">Удалить</a>
+          </form>
+          {% else %}
+
+          {% endif %}
+        </td>
+
+      {% else %}
+      
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>  
+</div>

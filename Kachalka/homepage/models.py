@@ -22,7 +22,7 @@ class Statistic(models.Model):
         return self.date.strftime('%d-%m-%Y')
 
     calories = models.IntegerField('Калории')
-    time = models.TimeField('Время', blank=True, null=True)
+    time = models.TimeField('Время')
     type = models.ForeignKey(
         Types,
         on_delete=models.CASCADE,

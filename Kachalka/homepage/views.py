@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from .models import Statistic, Records
-from .forms import RecordsForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Statistic, Records, Types
+from .forms import RecordsForm, StatisticForm
 from django.db.models import Avg, Count
 import datetime
 
@@ -34,11 +34,12 @@ def best_result(a):
 
 def statis():
     """Возвращает статистические данные для главной страницы."""
-    statis_list = Statistic.objects.values('date', 'calories', 'time', 'type__name')
+    statis_list = Statistic.objects.values('date', 'calories', 'time', 'type__name', 'pk').order_by('-date')
     best = best_result(statis_list)
     count = statis_list.aggregate(Count('date'))
     average_calories = round(statis_list.aggregate(Avg('calories'))['calories__avg'])
     avg_time = average_time(statis_list.values('time'))
+    types = Types.objects.all()
 
     return {
         'statis': statis_list,
@@ -46,17 +47,19 @@ def statis():
         'count': count,
         'average_calories': average_calories,
         'average_time': avg_time,
+        'types': types,
     }
 
 def records():
     """Возвращает данные о рекордах, включая дни с момента установления рекорда."""
-    records = Records.objects.values('exercise', 'record', 'date').order_by('-id')
+    records = Records.objects.values('exercise', 'record', 'date', 'pk').order_by('-id')
     records_with_days = [
         {
             'exercise': record['exercise'],
             'record': record['record'],
             'date': record['date'],
             'days_since_record': day_after(record['date']),
+            'pk': record['pk']
         }
         for record in records
     ]
@@ -68,11 +71,43 @@ def index(request):
     context = {**statis(), **records()}
     return render(request, template, context)
 
-def radd(request):
-    form = RecordsForm(request.POST or None)
+def radd(request, pk=None):
+    if pk is not None:
+        instance = get_object_or_404(Records, pk=pk)
+    else:
+        instance = None
+    form = RecordsForm(request.POST or None, instance=instance)
     template = 'homepage/index.html'
+    context = {'form': form,
+            **statis(), **records()}
     if form.is_valid():
         form.save()
-    context = {'form': form,
-               **statis(), **records()}
+        return redirect('homepage:index')
+
     return render(request, template, context)
+
+def rdelete(request, pk):
+    instance = get_object_or_404(Records, pk=pk)
+    instance.delete()
+    return redirect('homepage:index')
+
+def sadd(request, pk=None):
+    if pk is not None:
+        instance = get_object_or_404(Statistic, pk=pk)
+    else:
+        instance = None
+
+    form = StatisticForm(request.POST or None, instance=instance)
+    context = {'form': form,
+            **statis(), **records()}
+    
+    if form.is_valid():
+        form.save()
+        return redirect('homepage:index')
+
+    return render(request, 'homepage/index.html', context)
+
+def sdelete(request, pk):
+    instance = get_object_or_404(Statistic, pk=pk)
+    instance.delete()
+    return redirect('homepage:index')

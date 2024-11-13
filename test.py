@@ -1,3 +1,1 @@
-from datetime import date, timedelta
-
-print(date.today() - timedelta(days=100))
+<!-- {% if '/statis_add/' not in request.path or 'statis_edit' in request.path %} -->
