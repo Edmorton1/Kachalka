@@ -49,3 +49,15 @@ class Records(models.Model):
     
     def __str__(self):
         return f"{self.exercise} — {self.record}"
+    
+
+class User(models.Model):
+    title = models.CharField('Имя', max_length=32)
+    link = models.CharField('Ссылка', max_length=512)
+
+    class Meta:
+        verbose_name = 'Пользовательская ссылка'
+        verbose_name_plural = 'Пользовательские ссылки'
+
+    def __str__(self):
+        return 'Пользовательские ссылки'

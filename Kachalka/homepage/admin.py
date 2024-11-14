@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Statistic, Types, Records
+from .models import Statistic, Types, Records, User
 
 class StatisticAdmin(admin.ModelAdmin):
     list_display = (
@@ -28,7 +28,17 @@ class RecordsAdmin(admin.ModelAdmin):
         'record',
     )
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'link',
+    )
+    list_editable = (
+        'title',
+        'link',
+    )
 
+admin.site.register(User)
 admin.site.register(Statistic)
 admin.site.register(Types)
 admin.site.register(Records)

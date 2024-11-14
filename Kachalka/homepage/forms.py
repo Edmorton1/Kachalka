@@ -12,3 +12,4 @@ class StatisticForm(forms.ModelForm):
     class Meta:
         model = Statistic
         fields = '__all__'
+
