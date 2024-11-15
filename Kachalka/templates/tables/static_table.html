@@ -62,10 +62,10 @@
               {% endif %}
             </th>
             <th><input type="number" name="calories" class="form-control" value="{{ form.instance.calories }}"></th>
-            {% if form.instance.time == None %}
+            {% if 'statis_edit' not in request.path %}
             <th><input type="time" name="time" class="form-control" value="00:00"></th>
             {% else %}
-            <th><input type="time" name="time" class="form-control" value="{{ form.instance.time }}"></th>
+            <th><input type="time" name="time" class="form-control" value="0{{ form.instance.time }}"></th>
             {% endif %}
             <th>
               <select type="type" id="trainingType" name="type" class="form-control" required>

@@ -1,1 +1,8 @@
-<!-- {% if '/statis_add/' not in request.path or 'statis_edit' in request.path %} -->
+empty = []
+
+c = 0
+while c != 10:
+    empty.append({'None': 'None'})
+    c += 1
+
+print(empty)

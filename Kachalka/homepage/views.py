@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Statistic, Records, Types
-from .forms import RecordsForm, StatisticForm
+from .models import Statistic, Records, Types, User
+from .forms import RecordsForm, StatisticForm, UserForm
 from django.db.models import Avg, Count
 import datetime
 
@@ -65,10 +65,14 @@ def records():
     ]
     return {'records': records_with_days}
 
+def user_values():
+    return {'user_values': User.objects.all(),
+            'empty': [{'num': '0'}, {'num': '1'}, {'num': '2'}, {'num': '3'}, {'num': '4'}, {'num': '5'}, {'num': '6'}, {'num': '7'}, {'num': '8'}, {'num': '9'}]}
+
 def index(request):
     """Главное представление, объединяющее данные статистики и рекордов."""
     template = 'homepage/index.html'
-    context = {**statis(), **records()}
+    context = {**statis(), **records(), **user_values()}
     return render(request, template, context)
 
 def radd(request, pk=None):
@@ -111,3 +115,14 @@ def sdelete(request, pk):
     instance = get_object_or_404(Statistic, pk=pk)
     instance.delete()
     return redirect('homepage:index')
+
+def userhref(request, pk):
+    instance = get_object_or_404(User, pk=pk)
+    form = UserForm(request.POST or None, instance=instance)
+    context = {'form': form,
+               **user_values()}
+    if form.is_valid():
+        form.save()
+        return redirect('homepage:index')
+    
+    return render(request, 'homepage/index.html', context)
