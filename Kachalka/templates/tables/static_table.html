@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="{% static "css/static_table.css" %}">
 </head>
 
-<div class="static-table" style="margin-top: 100px">
+<div class="static-table" style="
+height: 100%;">
+
     <div class="buttons">
         {% if 'statis_add' not in request.path and 'statis_edit' not in request.path %}
         <a href="{% url "homepage:sadd" %}" type="button" class="btn btn-primary tree-button">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>

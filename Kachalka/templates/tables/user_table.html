@@ -1,56 +1,41 @@
 {% load static %}
 
-{{ user_values.0.pk }}
 
-{% if user_values.0 %}
-<a href="{{ user_values.0.link }}">{{ user_values.0.title }}</a>
-{% else %}
-
-{% endif %}
-
-{% if user_values.3 %}
-<a href="{{ user_values.3.link }}">{{ user_values.3.title }}</a>
-{% else %}
-
-{% endif %}
-
-<div style="width: 1000px;">
     <div class="table-responsive">
         <table class="table border">
             <thead>
-                <tr><th class="text-center" colspan="3">Пользовательские ссылки</th></tr>
+                <tr><th class="text-center" colspan="2">Пользовательские ссылки</th></tr>
             </thead>
             <tbody>
                 {% for user in user_values %}
                 <tr>
                     {% if user.title != None and user.link != None and user.pk|stringformat:"s" not in request.path %}
-                        <td class="d-flex justify-content-between"><a class="" href="{{ user.link }}">{{ user.title }}</a>
-                            <a class="btn btn-outline-primary" href="{% url "homepage:userhref_add" user.pk %}">Редактировать</a></td>
+                        <td colspan="2">
+                            <div class="d-flex justify-content-between">
+                                <a style="text-decoration: none; color: black;" target="_blank" href="{{ user.link }}">{{ user.title }}</a>
+                                <a class="btn btn-outline-primary" href="{% url "homepage:userhref_add" user.pk %}">Редактировать</a>
+                            </div></td>
                     {% elif user.pk|stringformat:"s" in request.path and user.pk == user.pk %}
                         <form method="POST">
                         {% csrf_token %}
-                            <td><input name="title" type="text" class="form-control" placeholder="Имя..." value={{ form.instance.title }}></td>
-                            <td><input name="link" type="text" class="form-control" placeholder="Ссылка..." value={{ form.instance.link }}></td>
-                            <button type="submit" hidden></button>
-                            
+                            {% if user.title == None or user.link == None %}
+                                <td><input name="title" type="text" class="form-control" placeholder="Имя..."></td>
+                                <td><input name="link" type="text" class="form-control" placeholder="Ссылка..."></td>
+                                <button type="submit" hidden></button>
+                            {% else %}
+                                <td><input name="title" type="text" class="form-control" placeholder="Имя..." value={{ form.instance.title }}></td>
+                                <td><input name="link" type="text" class="form-control" placeholder="Ссылка..." value={{ form.instance.link }}></td>
+                                <button type="submit" hidden></button>                 
+                            {% endif %}
                         </form>
                     {% else %}
-                        <td><a href="{% url "homepage:userhref_add" user.pk %}" class="form-control">ㅤ</a></td>
+                        <td colspan="2"><a style="text-decoration: none;" href="{% url "homepage:userhref_add" user.pk %}" class="form-control">ㅤ</a></td>
                     {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-</div>
-
-
-
-
-
-
-
-
 
 
 

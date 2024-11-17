@@ -83,7 +83,7 @@ def radd(request, pk=None):
     form = RecordsForm(request.POST or None, instance=instance)
     template = 'homepage/index.html'
     context = {'form': form,
-            **statis(), **records()}
+            **statis(), **records(), **user_values()}
     if form.is_valid():
         form.save()
         return redirect('homepage:index')
@@ -103,7 +103,7 @@ def sadd(request, pk=None):
 
     form = StatisticForm(request.POST or None, instance=instance)
     context = {'form': form,
-            **statis(), **records()}
+            **statis(), **records(), **user_values()}
     
     if form.is_valid():
         form.save()
@@ -120,7 +120,7 @@ def userhref(request, pk):
     instance = get_object_or_404(User, pk=pk)
     form = UserForm(request.POST or None, instance=instance)
     context = {'form': form,
-               **user_values()}
+               **statis(), **records(), **user_values()}
     if form.is_valid():
         form.save()
         return redirect('homepage:index')
