@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Statistic, Records, Types, User
-from .forms import RecordsForm, StatisticForm, UserForm
+from .models import *
+from .forms import *
 from django.db.models import Avg, Count
+from django.views.generic import UpdateView, CreateView, TemplateView
+from django.urls import reverse_lazy
+from .models import *
 import datetime
 
 # Вспомогательные функции
@@ -66,63 +69,58 @@ def records():
     return {'records': records_with_days}
 
 def user_values():
-    return {'user_values': User.objects.all(),
-            'empty': [{'num': '0'}, {'num': '1'}, {'num': '2'}, {'num': '3'}, {'num': '4'}, {'num': '5'}, {'num': '6'}, {'num': '7'}, {'num': '8'}, {'num': '9'}]}
+    return {'user_values': User.objects.all()}
 
-def index(request):
-    """Главное представление, объединяющее данные статистики и рекордов."""
-    template = 'homepage/index.html'
-    context = {**statis(), **records(), **user_values()}
-    return render(request, template, context)
+class IndexMixin:
+    template_name = 'homepage/index.html'
 
-def radd(request, pk=None):
-    if pk is not None:
-        instance = get_object_or_404(Records, pk=pk)
-    else:
-        instance = None
-    form = RecordsForm(request.POST or None, instance=instance)
-    template = 'homepage/index.html'
-    context = {'form': form,
-            **statis(), **records(), **user_values()}
-    if form.is_valid():
-        form.save()
-        return redirect('homepage:index')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["statis"] = statis()['statis']
+        context["best_result"] = statis()['best_result']
+        context["count"] = statis()['count']
+        context["average_calories"] = statis()['average_calories']
+        context["average_time"] = statis()['average_time']
+        context["types"] = statis()['types']
+        context["records"] = records()['records']
+        context["user_values"] = user_values()['user_values']
+        return context
 
-    return render(request, template, context)
+class IndexView(IndexMixin, TemplateView):
+    pass
+    
+class RecordsAddEditMixin:
+    model = Records
+    fields = '__all__'
+    success_url = reverse_lazy('homepage:index')
+
+class RecordsAddView(IndexMixin, RecordsAddEditMixin, CreateView):
+    pass
+
+class RecordsEditView(IndexMixin, RecordsAddEditMixin,  UpdateView):
+    pass
 
 def rdelete(request, pk):
     instance = get_object_or_404(Records, pk=pk)
     instance.delete()
     return redirect('homepage:index')
 
-def sadd(request, pk=None):
-    if pk is not None:
-        instance = get_object_or_404(Statistic, pk=pk)
-    else:
-        instance = None
+class StatisAddEditMixin:
+    model = Statistic
+    fields = '__all__'
+    success_url = reverse_lazy('homepage:index')
 
-    form = StatisticForm(request.POST or None, instance=instance)
-    context = {'form': form,
-            **statis(), **records(), **user_values()}
-    
-    if form.is_valid():
-        form.save()
-        return redirect('homepage:index')
+class StatisAdd(IndexMixin, StatisAddEditMixin, CreateView):
+    pass
 
-    return render(request, 'homepage/index.html', context)
+class StatisEdit(IndexMixin, StatisAddEditMixin, UpdateView):
+    pass
 
 def sdelete(request, pk):
     instance = get_object_or_404(Statistic, pk=pk)
     instance.delete()
     return redirect('homepage:index')
 
-def userhref(request, pk):
-    instance = get_object_or_404(User, pk=pk)
-    form = UserForm(request.POST or None, instance=instance)
-    context = {'form': form,
-               **statis(), **records(), **user_values()}
-    if form.is_valid():
-        form.save()
-        return redirect('homepage:index')
-    
-    return render(request, 'homepage/index.html', context)
+class UserAdd(IndexMixin, CreateView):
+    model = User
+    fields = '__all__'

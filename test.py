@@ -1,8 +1,11 @@
-empty = []
+def kwarg(**baba):
+    print(baba)
 
-c = 0
-while c != 10:
-    empty.append({'None': 'None'})
-    c += 1
-
-print(empty)
+asd = [{
+    'arg': {
+        'bab': 'asd',
+        'gab': 'sad'
+    },
+    'band': 'cant'
+}]
+kwarg(asd)

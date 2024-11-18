@@ -85,7 +85,7 @@ height: 100%;">
         </form>
         {% endif %}
         {% for part in statis %}
-        {% if part.pk != form.instance.pk %}
+        {% if part.pk != form.instance.pk and 'statis_edit' in request.path %}
         <tr>
           <td scope="row">{{ part.date }}</td>
           <td>{{ part.calories }}</td>
@@ -96,16 +96,36 @@ height: 100%;">
           {% endif %}
           <td>{{ part.type__name }}
             {% if '/statis_add/' in request.path or 'statis_edit' in request.path %}
-            <td class="text-center align-middle">
+            <td class="text-center align-middle" style="
+            width: 11vw;">
               <form method="POST">
                 {% csrf_token %}
                   <a href="{% url 'homepage:sedit' part.pk %}" class="btn btn-warning">Изменить</a>
                   <a href="{% url 'homepage:sdelete' part.pk %}" class="btn btn-danger">Удалить</a>
                 </form>
             </td>
-          {% else %}
+            {% endif %}
+          {% elif 'statis_edit' not in request.path %}
+          <tr>
+            <td scope="row">{{ part.date }}</td>
+            <td>{{ part.calories }}</td>
+            {% if part.time.hour == 0 %}
+            <td>{{ part.time.minute }} минут</td>
+            {% else %}
+            <td>{{ part.time.hour }} час {{ part.time.minute }} минут</td>
+            {% endif %}
+            <td>{{ part.type__name }}
+              {% if '/statis_add/' in request.path or 'statis_edit' in request.path %}
+              <td class="text-center align-middle" style="
+              width: 11vw;">
+                <form method="POST">
+                  {% csrf_token %}
+                    <a href="{% url 'homepage:sedit' part.pk %}" class="btn btn-warning">Изменить</a>
+                    <a href="{% url 'homepage:sdelete' part.pk %}" class="btn btn-danger">Удалить</a>
+                  </form>
+              </td>
+              {% endif %}
 
-          {% endif %}
           {% endif %}
           </td>
         </tr>

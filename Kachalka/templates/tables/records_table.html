@@ -7,8 +7,6 @@
 height: 100%;
 overflow-x: auto;">
 
-
-
 <div class="buttons">
 
 {% if '/records_add/' not in request.path and '/records_edit/' not in request.path %}
@@ -75,8 +73,22 @@ overflow-x: auto;">
           {% endif %}
         </td>
 
-      {% else %}
-      
+      {% elif 'records_edit' not in request.path %}
+      <tr>
+        <td>{{ part.exercise }}</td>
+        <td>{{ part.record }}</td>
+        <td>{{ part.days_since_record }}</td>
+        {% if '/records_add/' in request.path or '/records_edit/' in request.path %}
+        <td>
+          <form method="POST">
+          {% csrf_token %}
+            <a href="{% url 'homepage:edit' part.pk %}" class="btn btn-warning" >Изменить</a>
+            <a href="{% url 'homepage:rdelete' part.pk %}" class="btn btn-danger">Удалить</a>
+          </form>
+          {% else %}
+
+          {% endif %}
+        </td>
       {% endif %}
       {% endfor %}
     </tbody>
