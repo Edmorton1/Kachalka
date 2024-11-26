@@ -7,7 +7,7 @@
 height: 100%;">
 
     <div class="buttons">
-        {% if 'statis_add' not in request.path and 'statis_edit' not in request.path %}
+        {% if 'statis_add' not in request.path and 'statis_edit' not in request.path and user.is_authenticated %}
         <a href="{% url "homepage:sadd" %}" type="button" class="btn btn-primary tree-button">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>
         {% else %}
         <a href="{% url "homepage:sadd" %}" type="button" class="btn btn-primary tree-button disabled">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>

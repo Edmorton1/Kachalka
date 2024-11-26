@@ -6,6 +6,7 @@ from django.views.generic import UpdateView, CreateView, TemplateView
 from django.urls import reverse_lazy
 from .models import *
 import datetime
+from django.http import Http404
 
 # Вспомогательные функции
 
@@ -86,10 +87,16 @@ class IndexMixin:
         context["user_values"] = user_values()['user_values']
         return context
 
+class UserInSystemMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            raise Http404("Вы не авторизованы для просмотра этой страницы.")
+        return super().dispatch(request, *args, **kwargs)
+
 class IndexView(IndexMixin, TemplateView):
     pass
     
-class RecordsAddEditMixin:
+class RecordsAddEditMixin(UserInSystemMixin):
     model = Records
     fields = '__all__'
     success_url = reverse_lazy('homepage:index')
@@ -101,11 +108,14 @@ class RecordsEditView(IndexMixin, RecordsAddEditMixin,  UpdateView):
     pass
 
 def rdelete(request, pk):
+    if not request.user.is_authenticated:
+        raise Http404("Вы не авторизованы для просмотра этой страницы.")
+
     instance = get_object_or_404(Records, pk=pk)
     instance.delete()
     return redirect('homepage:index')
 
-class StatisAddEditMixin:
+class StatisAddEditMixin(UserInSystemMixin):
     model = Statistic
     fields = '__all__'
     success_url = reverse_lazy('homepage:index')
@@ -117,10 +127,20 @@ class StatisEdit(IndexMixin, StatisAddEditMixin, UpdateView):
     pass
 
 def sdelete(request, pk):
+    if not request.user.is_authenticated:
+        raise Http404("Вы не авторизованы для просмотра этой страницы.")
+
     instance = get_object_or_404(Statistic, pk=pk)
     instance.delete()
     return redirect('homepage:index')
 
-class UserAdd(IndexMixin, CreateView):
-    model = User
-    fields = '__all__'
+def userhref(request, pk):
+    instance = get_object_or_404(User, pk=pk)
+    form = UserForm(request.POST or None, instance=instance)
+    context = {'form': form,
+               **statis(), **records(), **user_values()}
+    if form.is_valid():
+        form.save()
+        return redirect('homepage:index')
+    
+    return render(request, 'homepage/index.html', context)

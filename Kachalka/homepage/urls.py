@@ -11,5 +11,5 @@ urlpatterns = [
     path('statis_add/', views.StatisAdd.as_view(), name='sadd'),
     path('<int:pk>/statis_edit', views.StatisEdit.as_view(), name='sedit'),
     path('<int:pk>/statis_delete/', views.sdelete, name='sdelete'),
-    path('<int:pk>/userhref_add/', views.UserAdd.as_view(), name='userhref_add')
+    path('<int:pk>/userhref_add/', views.userhref, name='userhref_add')
 ]

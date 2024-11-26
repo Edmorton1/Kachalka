@@ -6,6 +6,17 @@
     <nav class="navbar navbar-expand-lg user-color_bug">
         <div class="container-fluid">
           <a class="navbar-brand" href="{% url "homepage:index" %}"><img src="{% static "img/logo2.png" %}" alt=""></a>
+              {% if user.is_authenticated %}
+              <button class="btn btn-light">Добро пожаловать, {{ user.username|capfirst  }}</button>
+              <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-light">Выйти</button>
+              </form>
+              <a href="{% url "password_change" %}" style="color: white;"><button class="btn btn-light">Изменить пароль</button></a>
+              {% else %}
+              <a href="{% url "login" %}" style="color: white;"><button class="btn btn-light">Войти</button></a>
+              <a href="{% url "registration" %}" style="color: white;"><button class="btn btn-light">Регистрация</button></a>
+              {% endif %}
             <a class="nav-link active" aria-current="page" href="{% url "about:description" %}">ЧТО ЭТО ЗА САЙТ?</a>
         </div>
       </nav>

@@ -9,12 +9,14 @@ overflow-x: auto;">
 
 <div class="buttons">
 
-{% if '/records_add/' not in request.path and '/records_edit/' not in request.path %}
+{% if '/records_add/' not in request.path and '/records_edit/' not in request.path and user.is_authenticated %}
     <a href="{% url "homepage:radd" %}" class="btn btn-primary tree-button">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>
 {% elif '/records_add/' in request.path %}
     <a href="{% url "homepage:radd" %}" class="btn btn-primary disabled tree-button">ДОБАВИТЬ</a>
 {% elif '/records_edit/' in request.path  %}
     <a href="{% url "homepage:radd" %}" class="btn btn-primary disabled tree-button">ИЗМЕНИТЬ</a>
+{% else %}
+    <a href="{% url "homepage:radd" %}" class="btn btn-primary tree-button disabled">ДОБАВИТЬ/ИЗМЕНИТЬ/УДАЛИТЬ</a>
 {% endif %}
 
 
